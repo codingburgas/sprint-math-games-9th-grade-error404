@@ -1,6 +1,6 @@
+#include "button.hpp"
 #include <raylib.h>
 #include <iostream>
-#include "button.hpp"
 
 int main()
 {
@@ -8,9 +8,9 @@ int main()
 
     SetTargetFPS(60);
 
-    Texture2D background = LoadTexture("../assets/images/background.png");
-    Button startButton{ "../assets/images/start-button.png", {300, 150}, 0.65f };
-    Button exitButton{ "../assets/images/exit-button.png", {300, 300}, 0.65f };
+    Texture2D background = LoadTexture("../assets/images/menu-background.png");
+    Button startButton("../assets/images/start-button.png", {300, 150}, 0.65f);
+    Button exitButton("../assets/images/exit-button.png", {300, 300}, 0.65f );
 
     bool exit = false;
 
