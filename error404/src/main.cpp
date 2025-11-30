@@ -216,9 +216,9 @@ int main()
                 mKeyButton.Draw();
 
                 if (qKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_Q)) {
-                    
+
                 }
-                else if(wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_W)) {
+                else if (wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_W)) {
 
                 }
                 else if (eKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_E)) {
