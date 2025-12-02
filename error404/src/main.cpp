@@ -1,6 +1,5 @@
 #include "button.hpp"
 #include "word-select.h"
-#include "keyboard.h"
 
 #include <raylib.h>
 #include <iostream>
@@ -16,7 +15,6 @@ typedef enum Screen {
     MAINMENU,
     GAMEDIFICULTY,
     GAME,
-    GAMEMENU,
     WON,
     LOSE,
     CREDITS,
@@ -91,6 +89,9 @@ int main()
 
     bool exit = false;
 
+    int guessCount = 0;
+    char guessed[1000];
+
     while (!WindowShouldClose() && !exit)
     {
         Vector2 mousePosition = GetMousePosition();
@@ -98,6 +99,10 @@ int main()
 
         BeginDrawing();
         ClearBackground(BLACK);
+
+        char guess = '\0';
+        bool alreadyGuessed = false;
+        bool flag = false;
 
         DrawTexture(background, 0, 0, WHITE);
 
@@ -186,8 +191,6 @@ int main()
             
             case GAME:
             {
-                keyboard();
-
                 qKeyButton.Draw();
                 wKeyButton.Draw();
                 eKeyButton.Draw();
@@ -215,96 +218,171 @@ int main()
                 nKeyButton.Draw();
                 mKeyButton.Draw();
 
-                if (qKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_Q)) {
+                if (qKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Q)) {
+                    guess = 'q';
 
+                    flag = true;
                 }
-                else if (wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_W)) {
+                else if (wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_W)) {
+                    cout << "Button clicked w" << endl;
 
-                }
-                else if (eKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_E)) {
+                    guess = 'w';
 
+                    flag = true;
                 }
-                else if (rKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_R)) {
+                else if (eKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_E)) {
+                    cout << "Button clicked e" << endl;
 
+                    flag = true;
+                    
+                    guess = 'e';
                 }
-                else if (tKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_T)) {
+                else if (rKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_R)) {
+                    cout << "Button clicked r" << endl;
 
+                    guess = 'r';
+                    flag = true;
                 }
-                else if (yKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_Y)) {
+                else if (tKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_T)) {
+                    guess = 't';
 
+                    flag = true;
                 }
-                else if (uKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_U)) {
+                else if (yKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Y)) {
+                    cout << "Button clicked y" << endl;
 
-                }
-                else if (iKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_I)) {
+                    guess = 'y';
 
+                    flag = true;
                 }
-                else if (oKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_O)) {
+                else if (uKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_U)) {
+                    cout << "Button clicked u" << endl;
+                    flag = true;
 
+                    guess = 'u';
                 }
-                else if (pKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_P)) {
+                else if (iKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_I)) {
+                    flag = true;
 
+                    guess = 'i';
                 }
-                else if (aKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_A)) {
+                else if (oKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_O)) {
+                    flag = true;
 
+                    guess = 'o';
                 }
-                else if (sKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_S)) {
+                else if (pKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_P)) {
+                    flag = true;
 
+                    guess = 'p';
                 }
-                else if (dKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_D)) {
+                else if (aKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_A)) {
+                    flag = true;
 
+                    guess = 'a';
                 }
-                else if (fKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_F)) {
+                else if (sKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_S)) {
+                    flag = true;
 
+                    guess = 's';
                 }
-                else if (gKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_G)) {
+                else if (dKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_D)) {
+                    flag = true;
 
+                    guess = 'd';
                 }
-                else if (hKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_H)) {
+                else if (fKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_F)) {
+                    flag = true;
 
+                    guess = 'f';
                 }
-                else if (jKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_J)) {
+                else if (gKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_G)) {
+                    flag = true;
 
+                    guess = 'g';
                 }
-                else if (kKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_K)) {
+                else if (hKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_H)) {
+                    flag = true;
 
+                    guess = 'h';
                 }
-                else if (lKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_L)) {
+                else if (jKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_J)) {
+                    flag = true;
 
+                    guess = 'j';
                 }
-                else if (zKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_Z)) {
+                else if (kKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_K)) {
+                    flag = true;
 
+                    guess = 'k';
                 }
-                else if (xKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_X)) {
+                else if (lKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_L)) {
+                    flag = true;
 
+                    guess = 'l';
                 }
-                else if (cKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_C)) {
+                else if (zKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Z)) {
+                    flag = true;
 
+                    guess = 'z';
                 }
-                else if (vKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_V)) {
+                else if (xKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_X)) {
+                    flag = true;
 
+                    guess = 'x';
                 }
-                else if (bKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_B)) {
+                else if (cKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_C)) {
+                    flag = true;
 
+                    guess = 'c';
                 }
-                else if (nKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_N)) {
+                else if (vKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_V)) {
+                    flag = true;
 
+                    guess = 'v';
                 }
-                else if (mKeyButton.isPressed(mousePosition, mousePressed) or IsKeyDown(KEY_M)) {
+                else if (bKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_B)) {
+                    flag = true;
 
+                    guess = 'b';
                 }
-                
-                if (IsKeyDown(KEY_ESCAPE)) {
-                    currentScreen = GAMEMENU;
-                }
-            }break;
-            
-            case GAMEMENU:
-            {
-                resumeButton.Draw();
+                else if (nKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_N)) {
+                    flag = true;
 
-                if (resumeButton.isPressed(mousePosition, mousePressed)) {
-                    currentScreen = GAME;
+                    guess = 'n';
+                }
+                else if (mKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_M)) {
+                    flag = true;
+
+                    guess = 'm';
+                }
+
+                for (int i = 0; i < guessCount; i++) {
+                    if (guessed[i] == guess) {
+                        alreadyGuessed = true;
+                        break;
+                    }
+                }
+
+                if (alreadyGuessed) {
+                    cout << endl << "You already guessed this letter! Try again" << endl;
+                    
+                    alreadyGuessed = false;
+
+                    for (int i = 0; i < guessCount; i++) {
+                        if (guessed[i] == guess) {
+                            alreadyGuessed = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (flag) {
+                    cout << "Button clicked " << guess << endl;
+
+                    flag = false;
+
+                    guessed[guessCount++] = guess;
                 }
             }break;
             
