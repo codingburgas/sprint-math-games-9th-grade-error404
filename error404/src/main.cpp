@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <cstdlib>
+#include <format>
 
 
 
@@ -27,7 +27,11 @@ int main()
 {   
     srand(time(NULL));
 
-    InitWindow(800, 600, "Raylib Buttons Tutorial");
+    InitWindow(800, 600, "Hangman by error404");
+
+    Font font = LoadFont("../assets/rayando.ttf");
+
+    SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
 
     SetExitKey(KEY_NULL);
 
@@ -36,7 +40,33 @@ int main()
     Texture2D background = LoadTexture("../assets/images/background.png");
     Texture2D logo = LoadTexture("../assets/images/logo.png");
 
-    
+
+    Texture2D keyQ = LoadTexture("../assets/buttons/q-key-button");
+    Texture2D keyW = LoadTexture("../assets/buttons/w-key-button");
+    Texture2D keyE = LoadTexture("../assets/buttons/e-key-button");
+    Texture2D keyR = LoadTexture("../assets/buttons/r-key-button");
+    Texture2D keyT = LoadTexture("../assets/buttons/t-key-button");
+    Texture2D keyY = LoadTexture("../assets/buttons/y-key-button");
+    Texture2D keyU = LoadTexture("../assets/buttons/u-key-button");
+    Texture2D keyI = LoadTexture("../assets/buttons/i-key-button");
+    Texture2D keyO = LoadTexture("../assets/buttons/o-key-button");
+    Texture2D keyP = LoadTexture("../assets/buttons/p-key-button");
+    Texture2D keyA = LoadTexture("../assets/buttons/a-key-button");
+    Texture2D keyS = LoadTexture("../assets/buttons/s-key-button");
+    Texture2D keyD = LoadTexture("../assets/buttons/d-key-button");
+    Texture2D keyF = LoadTexture("../assets/buttons/f-key-button");
+    Texture2D keyG = LoadTexture("../assets/buttons/g-key-button");
+    Texture2D keyH = LoadTexture("../assets/buttons/h-key-button");
+    Texture2D keyJ = LoadTexture("../assets/buttons/j-key-button");
+    Texture2D keyK = LoadTexture("../assets/buttons/k-key-button");
+    Texture2D keyL = LoadTexture("../assets/buttons/l-key-button");
+    Texture2D keyZ = LoadTexture("../assets/buttons/z-key-button");
+    Texture2D keyX = LoadTexture("../assets/buttons/x-key-button");
+    Texture2D keyC = LoadTexture("../assets/buttons/c-key-button");
+    Texture2D keyV = LoadTexture("../assets/buttons/v-key-button");
+    Texture2D keyB = LoadTexture("../assets/buttons/b-key-button");
+    Texture2D keyN = LoadTexture("../assets/buttons/n-key-button");
+    Texture2D keyM = LoadTexture("../assets/buttons/m-key-button");
 
     Button startButton("../assets/buttons/start-button.png", { 335, 230 }, 0.60f); 
     Button exitButton("../assets/buttons/exit-button.png", { 343, 500 }, 0.60f);
@@ -86,11 +116,19 @@ int main()
     int gameDifculty = 0;
 
     char word[100];
+    int wordSize;
 
     bool exit = false;
 
     int guessCount = 0;
     char guessed[1000];
+    bool reveal[1000] = { false };
+    int revealCounter = 0;
+    char guess = '\0';
+    char lastGuess = '\0';
+
+    char message[200] = "";
+    int messageTimer = 0;
 
     while (!WindowShouldClose() && !exit)
     {
@@ -100,7 +138,6 @@ int main()
         BeginDrawing();
         ClearBackground(BLACK);
 
-        char guess = '\0';
         bool alreadyGuessed = false;
         bool flag = false;
 
@@ -129,7 +166,7 @@ int main()
             
             case GAMEDIFICULTY:
             {
-                DrawText("Choose game dificulty", 140, 150, 50, WHITE);
+                DrawTextEx(font, "Choose game dificulty", {140, 150}, 50, 2, WHITE);
                 
                 hardButton.Draw();
                 mediumButton.Draw();
@@ -141,7 +178,7 @@ int main()
                     gameDifculty = 3;
 
                     strcpy_s(word, strlen(word), wordSelect(gameDifculty).c_str());
-                    int wordSize = strlen(word);
+                    wordSize = strlen(word);
 
                     for (int i = 0; i < wordSize; i++) {
                         cout << word[i];
@@ -156,7 +193,7 @@ int main()
                     gameDifculty = 2;
 
                     strcpy_s(word, strlen(word), wordSelect(gameDifculty).c_str());
-                    int wordSize = strlen(word);
+                    wordSize = strlen(word);
 
                     for (int i = 0; i < wordSize; i++) {
                         cout << word[i];
@@ -171,7 +208,7 @@ int main()
                     gameDifculty = 1;
 
                     strcpy_s(word, strlen(word), wordSelect(gameDifculty).c_str());
-                    int wordSize = strlen(word);
+                    wordSize = strlen(word);
 
                     for (int i = 0; i < wordSize; i++) {
                         cout << word[i];
@@ -218,29 +255,45 @@ int main()
                 nKeyButton.Draw();
                 mKeyButton.Draw();
 
+
+
+                if (guess != '\0')
+                {
+                    for (int i = 0; i < wordSize; i++) {
+                        if (word[i] == guess) {
+                            reveal[i] = true;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < wordSize; i++) {
+                    if (reveal[i]) {
+                        DrawTextEx(font, TextFormat("%c", word[i]), Vector2{ 50.0f + i * 50.0f, 200.0f }, 80.0f, 2.0f, WHITE);
+                    }
+                    else {
+                        DrawText("_", 50 + i * 50, 200, 80, WHITE);
+                    }
+                }
+
+
                 if (qKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Q)) {
                     guess = 'q';
 
                     flag = true;
                 }
                 else if (wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_W)) {
-                    cout << "Button clicked w" << endl;
-
                     guess = 'w';
 
                     flag = true;
                 }
                 else if (eKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_E)) {
-                    cout << "Button clicked e" << endl;
-
                     flag = true;
                     
                     guess = 'e';
                 }
                 else if (rKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_R)) {
-                    cout << "Button clicked r" << endl;
-
                     guess = 'r';
+
                     flag = true;
                 }
                 else if (tKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_T)) {
@@ -249,14 +302,11 @@ int main()
                     flag = true;
                 }
                 else if (yKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Y)) {
-                    cout << "Button clicked y" << endl;
-
                     guess = 'y';
 
                     flag = true;
                 }
                 else if (uKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_U)) {
-                    cout << "Button clicked u" << endl;
                     flag = true;
 
                     guess = 'u';
@@ -364,17 +414,15 @@ int main()
                     }
                 }
 
-                if (alreadyGuessed) {
-                    cout << endl << "You already guessed this letter! Try again" << endl;
-                    
-                    alreadyGuessed = false;
+                if (alreadyGuessed && guess != '\0' && lastGuess != guess) {
+                    sprintf(message, "You already guessed '%c'!", guess);
+                    messageTimer = 120;
+                }
 
-                    for (int i = 0; i < guessCount; i++) {
-                        if (guessed[i] == guess) {
-                            alreadyGuessed = true;
-                            break;
-                        }
-                    }
+                if (messageTimer > 0)
+                {
+                    DrawTextEx(font, message, Vector2{ 50.0f, 100.0f }, 30.0f , 5.0f, RED);
+                    messageTimer--;
                 }
 
                 if (flag) {
@@ -382,6 +430,7 @@ int main()
 
                     flag = false;
 
+                    lastGuess = guess;
                     guessed[guessCount++] = guess;
                 }
             }break;
