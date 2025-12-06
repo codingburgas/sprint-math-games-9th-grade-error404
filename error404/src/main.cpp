@@ -13,7 +13,7 @@ using namespace std;
 
 typedef enum Screen {
     MAINMENU,
-    GAMEDIFICULTY,
+    GAMEDIFFICULTY,
     GAME,
     WON,
     LOSE,
@@ -75,7 +75,7 @@ int main()
     Button mediumButton("../assets/buttons/medium-button.png", { 300, 270 }, 0.21f);
     Button easyButton("../assets/buttons/easy-button.png", { 530, 270 }, 0.15f);
 
-    Button backButton("../assets/buttons/back-button.png", { 320, 450 }, 0.15f);
+    Button backButton("../assets/buttons/back-button.png", { 320, 500 }, 0.15f);
 
     Button resumeButton("../assets/buttons/resume-button.png", { 320, 200}, 0.40f);
 
@@ -113,7 +113,7 @@ int main()
     Button nKeyButton("../assets/buttons/n-key-button.png", { 405 + offsetZ, 500 }, 0.80f);
     Button mKeyButton("../assets/buttons/m-key-button.png", { 480 + offsetZ, 500 }, 0.80f);
 
-    int gameDifculty = 0;
+    int gameDifficulty = 0;
 
     char word[100];
     int wordSize;
@@ -155,7 +155,7 @@ int main()
                 exitButton.Draw();
                 
                 if (startButton.isPressed(mousePosition, mousePressed)) {
-                    currentScreen = GAMEDIFICULTY;
+                    currentScreen = GAMEDIFFICULTY;
                 }
 
                 if (exitButton.isPressed(mousePosition, mousePressed)) {
@@ -167,67 +167,51 @@ int main()
                 }
             }break;
             
-            case GAMEDIFICULTY:
+            case GAMEDIFFICULTY:
             {
-                DrawTextEx(font, "Choose game dificulty", {140, 150}, 50, 2, WHITE);
-                
+                DrawTextEx(font, "Choose game difficulty", { 100, 150 }, 50, 2, WHITE);
+
                 hardButton.Draw();
                 mediumButton.Draw();
                 easyButton.Draw();
 
                 backButton.Draw();
 
-                if (hardButton.isPressed(mousePosition, mousePressed)) {
-                    gameDifculty = 3;
+                auto loadWord = [&](int diff) {
+                    std::string s = wordSelect(diff);
+                    strcpy_s(word, sizeof(word), s.c_str());
+                    wordSize = (int)s.size();
 
-                    strcpy_s(word, strlen(word), wordSelect(gameDifculty).c_str());
-                    wordSize = strlen(word);
+                    memset(reveal, 0, sizeof(reveal));
+                    guessCount = 0;
+                    revealCounter = 0;
+                    guess = '\0';
+                    lastGuess = '\0';
 
-                    for (int i = 0; i < wordSize; i++) {
-                        cout << word[i];
-                    }
-                    
-                    cout << endl;
-
+                    cout << "Selected word: " << s << endl;
                     currentScreen = GAME;
+                    };
+
+                if (hardButton.isPressed(mousePosition, mousePressed)) {
+                    gameDifficulty = 3;
+                    loadWord(gameDifficulty);
                 }
 
                 if (mediumButton.isPressed(mousePosition, mousePressed)) {
-                    gameDifculty = 2;
-
-                    strcpy_s(word, strlen(word), wordSelect(gameDifculty).c_str());
-                    wordSize = strlen(word);
-
-                    for (int i = 0; i < wordSize; i++) {
-                        cout << word[i];
-                    }
-
-                    cout << endl;
-
-                    currentScreen = GAME;
+                    gameDifficulty = 2;
+                    loadWord(gameDifficulty);
                 }
 
                 if (easyButton.isPressed(mousePosition, mousePressed)) {
-                    gameDifculty = 1;
-
-                    strcpy_s(word, strlen(word), wordSelect(gameDifculty).c_str());
-                    wordSize = strlen(word);
-
-                    for (int i = 0; i < wordSize; i++) {
-                        cout << word[i];
-                    }
-
-                    cout << endl;
-
-
-
-                    currentScreen = GAME;
+                    gameDifficulty = 1;
+                    loadWord(gameDifficulty);
                 }
 
                 if (backButton.isPressed(mousePosition, mousePressed)) {
                     currentScreen = MAINMENU;
                 }
-            }break;
+            } break;
+
             
             case GAME:
             {
@@ -410,31 +394,33 @@ int main()
                     guess = 'm';
                 }
 
-                for (int i = 0; i < guessCount; i++) {
-                    if (guessed[i] == guess) {
-                        alreadyGuessed = true;
-                        break;
-                    }
-                }
-
-                if (alreadyGuessed && guess != '\0' && lastGuess != guess) {
-                    sprintf(message, "You already guessed '%c'!", guess);
-                    messageTimer = 120;
-                }
-
                 if (messageTimer > 0)
                 {
-                    DrawTextEx(font, message, Vector2{ 50.0f, 100.0f }, 30.0f , 5.0f, RED);
+                    DrawTextEx(font, message, Vector2{ 50.0f, 100.0f }, 30.0f, 5.0f, RED);
                     messageTimer--;
                 }
 
-                if (flag) {
+                if (flag)
+                {
+                    bool alreadyGuessed = false;
+                    for (int i = 0; i < guessCount; i++) {
+                        if (guessed[i] == guess) {
+                            alreadyGuessed = true;
+                            break;
+                        }
+                    }
+
+                    if (alreadyGuessed) {
+                        sprintf(message, "You already guessed '%c'!", guess);
+                        messageTimer = 120;
+                    }
+                    else {
+                        guessed[guessCount++] = guess;
+                    }
+
                     cout << "Button clicked " << guess << endl;
-
-                    flag = false;
-
                     lastGuess = guess;
-                    guessed[guessCount++] = guess;
+                    flag = false;
                 }
             }break;
             
@@ -459,12 +445,13 @@ int main()
 
                 DrawTextEx(font, "How to play", { 200, 90 }, 50, 10, WHITE);
 
-                DrawTextEx(font, "You guess one letter at a time. If your letter is in", { 30, 200 }, 25, 2, WHITE);
-                DrawTextEx(font, "the word, every instance of that letter is filled in.", { 30, 240 }, 25, 2, WHITE);
-                DrawTextEx(font, "If the letter is not in the word, the game adds one ", { 30, 280 }, 25, 2, WHITE);
-                DrawTextEx(font, "part to the hangman drawing. You keep guessing ", { 30, 320 }, 25, 2, WHITE);
-                DrawTextEx(font, "until the word is complete or the hangman is fully ", { 30, 360 }, 25, 2, WHITE);
-                DrawTextEx(font, "drawn", { 30, 400 }, 25, 2, WHITE);
+                DrawTextEx(font, "You guess one letter at a time. ", { 30, 200 }, 25, 2, WHITE);
+                DrawTextEx(font, "If your letter is in the word, every instance of ", { 30, 240 }, 25, 2, WHITE);
+                DrawTextEx(font, "that letter is filled in. ", { 30, 280 }, 25, 2, WHITE);
+                DrawTextEx(font, "If the letter is not in the word, the game adds one ", { 30, 320 }, 25, 2, WHITE);
+                DrawTextEx(font, "part to the hangman drawing. ", { 30, 360 }, 25, 2, WHITE);
+                DrawTextEx(font, "You keep guessing until the word is complete or ", { 30, 400 }, 25, 2, WHITE);
+                DrawTextEx(font, "the hangman is fully drawn", { 30, 440 }, 25, 2, WHITE);
 
                 if (backButton.isPressed(mousePosition, mousePressed)) {
                     currentScreen = MAINMENU;

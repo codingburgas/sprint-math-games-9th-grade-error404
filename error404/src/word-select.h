@@ -4,8 +4,8 @@
 
 using namespace std;
 
-string wordSelect(int gameDificulty) {
-    if (gameDificulty == 3) {
+string wordSelect(int gameDifficulty) {
+    if (gameDifficulty == 3) {
         string hardWords[100] = {
             "zephyr", "quixotic", "onomatopoeia", "obfuscate", "larynx", "rhythmic", "phlegm", "syzygy", "mnemonic",
             "euphemism", "chiaroscuro", "susurrus", "juxtapose", "labyrinthine", "apotheosis", "esoteric", "nefarious",
@@ -24,7 +24,7 @@ string wordSelect(int gameDificulty) {
 
         return hardWords[rand() % 100];
     }
-    else if(gameDificulty == 2) {
+    else if(gameDifficulty == 2) {
         string mediumWords[100] = {
         "mountain","computer","elephant","festival","library","painter",
         "country","pocket","dangerous","diamond","picture","holiday","journey",
