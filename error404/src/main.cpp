@@ -162,6 +162,9 @@ int main()
                     exit = true;
                 }
                 
+                if (rulesButton.isPressed(mousePosition, mousePressed)) {
+                    currentScreen = RULES;
+                }
             }break;
             
             case GAMEDIFICULTY:
@@ -267,7 +270,7 @@ int main()
                 }
 
                 for (int i = 0; i < wordSize; i++) {
-                    if (reveal[i]) {
+                    if (reveal[i] or i == 0 or i == wordSize - 1) {
                         DrawTextEx(font, TextFormat("%c", word[i]), Vector2{ 50.0f + i * 50.0f, 200.0f }, 80.0f, 2.0f, WHITE);
                     }
                     else {
@@ -452,7 +455,20 @@ int main()
             
             case RULES:
             {
-                
+                backButton.Draw();
+
+                DrawTextEx(font, "How to play", { 200, 90 }, 50, 10, WHITE);
+
+                DrawTextEx(font, "You guess one letter at a time. If your letter is in", { 30, 200 }, 25, 2, WHITE);
+                DrawTextEx(font, "the word, every instance of that letter is filled in.", { 30, 240 }, 25, 2, WHITE);
+                DrawTextEx(font, "If the letter is not in the word, the game adds one ", { 30, 280 }, 25, 2, WHITE);
+                DrawTextEx(font, "part to the hangman drawing. You keep guessing ", { 30, 320 }, 25, 2, WHITE);
+                DrawTextEx(font, "until the word is complete or the hangman is fully ", { 30, 360 }, 25, 2, WHITE);
+                DrawTextEx(font, "drawn", { 30, 400 }, 25, 2, WHITE);
+
+                if (backButton.isPressed(mousePosition, mousePressed)) {
+                    currentScreen = MAINMENU;
+                }
             }break;
         }
 
