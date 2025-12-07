@@ -29,18 +29,14 @@ int main()
 
     InitWindow(800, 600, "Hangman by error404");
 
-    Font font = LoadFont("../assets/rayando.ttf");
-
-    SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);
+    Font rayando = LoadFontEx("../assets/Rayando.ttf", 64, 0, 0);
 
     SetExitKey(KEY_NULL);
 
     SetTargetFPS(60);
 
     Texture2D background = LoadTexture("../assets/images/background.png");
-    Texture2D logo = LoadTexture("../assets/images/logo.png");
-
-
+    Texture2D gameName = LoadTexture("../assets/images/game-name.png");
 
     Texture2D keyQ = LoadTexture("../assets/buttons/q-key-button");
     Texture2D keyW = LoadTexture("../assets/buttons/w-key-button");
@@ -119,7 +115,22 @@ int main()
     Button nKeyButton("../assets/buttons/n-key-button.png", { 405 + offsetZ, 500 }, 0.80f);
     Button mKeyButton("../assets/buttons/m-key-button.png", { 480 + offsetZ, 500 }, 0.80f);
 
+    Button playAgain("../assets/buttons/play-again-button.png", { 50, 275 }, 0.40f);
+    Button backToMenu("../assets/buttons/back-to-menu-button.png", { 475, 280 }, 0.40f);
+
+    Texture2D hangman[7] = {
+        LoadTexture("../assets/images/hangman1.png"),
+        LoadTexture("../assets/images/hangman2.png"),
+        LoadTexture("../assets/images/hangman3.png"),
+        LoadTexture("../assets/images/hangman4.png"),
+        LoadTexture("../assets/images/hangman5.png"),
+        LoadTexture("../assets/images/hangman6.png"),
+        LoadTexture("../assets/images/hangman7.png")
+    };
+
     int gameDifficulty = 0;
+
+    int lives = 7;
 
     char word[100];
     int wordSize;
@@ -127,14 +138,25 @@ int main()
     bool exit = false;
 
     int guessCount = 0;
-    char guessed[1000];
-    bool reveal[1000] = { false };
     int revealCounter = 0;
     char guess = '\0';
-    char lastGuess = '\0';
+    int stage = 0;
+
+    bool flag = false;
+
+    bool wrong;
+
+    int winCount = 0;
+    int lostCount = 0;
+
+    char guessed[1000];
+    bool reveal[1000] = { false };
 
     char message[200] = "";
     int messageTimer = 0;
+
+    char winsMessage[200];
+    char lossesMesssage[200];
 
     while (!WindowShouldClose() && !exit)
     {
@@ -144,16 +166,13 @@ int main()
         BeginDrawing();
         ClearBackground(BLACK);
 
-        bool alreadyGuessed = false;
-        bool flag = false;
-
         DrawTexture(background, 0, 0, WHITE);
 
         switch (currentScreen)
         {
         case MAINMENU:
         {
-            DrawTexture(logo, 200, 60, WHITE);
+            DrawTexture(gameName, 200, 60, WHITE);
 
             startButton.Draw();
             rulesButton.Draw();
@@ -179,7 +198,7 @@ int main()
 
         case GAMEDIFFICULTY:
         {
-            DrawTextEx(font, "Choose game difficulty", { 105, 150 }, 50, 2, WHITE);
+            DrawTextEx(rayando, "Choose game difficulty", { 105, 150 }, 50, 2, WHITE);
 
             hardButton.Draw();
             mediumButton.Draw();
@@ -189,9 +208,16 @@ int main()
 
             if (hardButton.isPressed(mousePosition, mousePressed)) {
                 gameDifficulty = 3;
+                lives = 7;
 
-                strcpy_s(word, strlen(word), wordSelect(gameDifficulty).c_str());
-                wordSize = strlen(word);
+                string temp = wordSelect(gameDifficulty);
+                strcpy_s(word, sizeof(word), temp.c_str());
+                wordSize = temp.length();
+
+                for (int i = 0; i < 1000; i++) {
+                    guessed[i] = '\0';
+                    reveal[i] = false;
+                }
 
                 for (int i = 0; i < wordSize; i++) {
                     cout << word[i];
@@ -204,9 +230,16 @@ int main()
 
             if (mediumButton.isPressed(mousePosition, mousePressed)) {
                 gameDifficulty = 2;
+                lives = 7;
 
-                strcpy_s(word, strlen(word), wordSelect(gameDifficulty).c_str());
-                wordSize = strlen(word);
+                string temp = wordSelect(gameDifficulty);
+                strcpy_s(word, sizeof(word), temp.c_str());
+                wordSize = temp.length();
+
+                for (int i = 0; i < 1000; i++) {
+                    guessed[i] = '\0';
+                    reveal[i] = false;
+                }
 
                 for (int i = 0; i < wordSize; i++) {
                     cout << word[i];
@@ -219,9 +252,16 @@ int main()
 
             if (easyButton.isPressed(mousePosition, mousePressed)) {
                 gameDifficulty = 1;
+                lives = 7;
 
-                strcpy_s(word, strlen(word), wordSelect(gameDifficulty).c_str());
-                wordSize = strlen(word);
+                string temp = wordSelect(gameDifficulty);
+                strcpy_s(word, sizeof(word), temp.c_str());
+                wordSize = temp.length();
+
+                for (int i = 0; i < 1000; i++) {
+                    guessed[i] = '\0';
+                    reveal[i] = false;
+                }
 
                 for (int i = 0; i < wordSize; i++) {
                     cout << word[i];
@@ -268,20 +308,78 @@ int main()
             nKeyButton.Draw();
             mKeyButton.Draw();
 
-
-
-            if (guess != '\0')
+            if (flag)
             {
-                for (int i = 0; i < wordSize; i++) {
-                    if (word[i] == guess) {
-                        reveal[i] = true;
+                bool allGuessed = false;
+                bool alreadyGuessed = false;
+
+                wrong = false;
+
+                for (int i = 0; i < guessCount; i++) {
+                    if (guess == guessed[i]) {
+                        alreadyGuessed = true;
+                        break;
                     }
                 }
+
+                if (alreadyGuessed) {
+                    sprintf(message, "You already guessed '%c'!", guess);
+                    messageTimer = 120;
+                }
+
+                bool correct = false;
+
+                for (int i = 0; i < wordSize; i++)
+                {
+                    if (word[i] == guess)
+                    {
+                        reveal[i] = true;
+                        correct = true;
+                    }
+                }
+
+                for (int i = 1; i < wordSize - 1; i++) {
+                    if (reveal[i]) {
+                        allGuessed = true;
+                    }
+                    else {
+                        allGuessed = false;
+                        break;
+                    }
+                }
+
+                if (!correct and !alreadyGuessed)
+                {
+                    wrong = true;
+                    messageTimer = 120;
+                    lives--;
+                }
+
+                guessed[guessCount++] = guess;
+
+                if (allGuessed) {
+                    winCount++;
+                    sprintf(lossesMesssage, "losses: '%d'", lostCount);
+                    sprintf(winsMessage, "wins: '%d'", winCount);
+                    currentScreen = WON;
+                }
+
+                flag = false;
+            }
+
+            if (messageTimer > 0 and wrong) {
+                DrawTextEx(rayando, "Wrong guess", {50, 100}, 30, 2, RED);
+                messageTimer--;
+            }
+
+            if (messageTimer > 0) {
+                DrawTextEx(rayando, message, { 50, 50 }, 30, 2, RED);
+                messageTimer--;
             }
 
             for (int i = 0; i < wordSize; i++) {
                 if (reveal[i] or i == 0 or i == wordSize - 1) {
-                    DrawTextEx(font, TextFormat("%c", word[i]), Vector2{ 50.0f + i * 50.0f, 200.0f }, 80.0f, 2.0f, WHITE);
+                    DrawTextEx(rayando, TextFormat("%c", word[i]), Vector2{ 50.0f + i * 50.0f, 200.0f }, 70.0f, 3.0f, WHITE);
                 }
                 else {
                     DrawText("_", 50 + i * 50, 200, 80, WHITE);
@@ -420,42 +518,64 @@ int main()
                 guess = 'm';
             }
 
-            for (int i = 0; i < guessCount; i++) {
-                if (guessed[i] == guess) {
-                    alreadyGuessed = true;
-                    break;
-                }
+            stage = 7 - lives;
+            if (stage < 0) {
+                stage = 0;
+            }
+            if (stage > 6) {
+                stage = 6;
             }
 
-            if (alreadyGuessed && guess != '\0' && lastGuess != guess) {
-                sprintf(message, "You already guessed '%c'!", guess);
-                messageTimer = 120;
-            }
+            DrawTextureEx(hangman[stage], { 460.0f, 0.0f}, 0.0f, 1.3f, WHITE);
 
-            if (messageTimer > 0)
-            {
-                DrawTextEx(font, message, Vector2{ 50.0f, 100.0f }, 30.0f, 5.0f, RED);
-                messageTimer--;
-            }
-
-            if (flag) {
-                cout << "Button clicked " << guess << endl;
-
-                flag = false;
-
-                lastGuess = guess;
-                guessed[guessCount++] = guess;
+            if (lives == 1) {
+                lostCount++;
+                sprintf(winsMessage, "wins: '%d'", winCount);
+                sprintf(lossesMesssage, "losses: '%d'", lostCount);
+                currentScreen = LOSE;
             }
         }break;
 
         case WON:
-        {
+        {   
+            DrawTextEx(rayando, "Congratulations \n       you won", {150, 75}, 50, 4, WHITE);
 
+            DrawTextureEx(hangman[stage], { 130.0f, 150.0f }, 0.0f, 1.5f, WHITE);
+
+            playAgain.Draw();
+            backToMenu.Draw();
+
+            DrawTextEx(rayando, winsMessage, Vector2{ 50.0f, 500.0f }, 30.0f, 2.0f, GREEN);
+            DrawTextEx(rayando, lossesMesssage, Vector2{ 50.0f, 550.0f }, 30.0f, 2.0f, RED);
+
+            if (playAgain.isPressed(mousePosition, mousePressed)) {
+                currentScreen = GAMEDIFFICULTY;
+            }
+
+            if (backToMenu.isPressed(mousePosition, mousePressed)) {
+                currentScreen = MAINMENU;
+            }
         }break;
 
         case LOSE:
         {
+            DrawTextEx(rayando, "you got hanged", { 150, 75 }, 50, 4, RED);
 
+            DrawTextureEx(hangman[stage], { 130.0f, 150.0f }, 0.0f, 1.5f, WHITE);
+
+            playAgain.Draw();
+            backToMenu.Draw();
+
+            DrawTextEx(rayando, winsMessage, Vector2{ 50.0f, 500.0f }, 30.0f, 2.0f, GREEN);
+            DrawTextEx(rayando, lossesMesssage, Vector2{ 50.0f, 550.0f }, 30.0f, 2.0f, RED);
+
+            if (playAgain.isPressed(mousePosition, mousePressed)) {
+                currentScreen = GAMEDIFFICULTY;
+            }
+
+            if (backToMenu.isPressed(mousePosition, mousePressed)) {
+                currentScreen = MAINMENU;
+            }
         }break;
 
         case CREDITS:
@@ -467,12 +587,12 @@ int main()
             DrawTexture(iliqn, 538, 332, WHITE);
             DrawTexture(zlati, 70, 332, WHITE);
 
-            DrawTextEx(font, "Our team", { 275, 280 }, 50, 3, WHITE);
+            DrawTextEx(rayando, "Our team", { 275, 280 }, 50, 3, WHITE);
 
-            DrawTextEx(font, "Galin Enev", { 75, 30 }, 30, 3, WHITE);
-            DrawTextEx(font, "Rosica Velkova", { 510, 30 }, 30, 3, WHITE);
-            DrawTextEx(font, "Zlati Georgakiev", { 35, 554 }, 30, 3, WHITE);
-            DrawTextEx(font, "Iliqn Iliev", { 550, 554 }, 30, 3, WHITE);
+            DrawTextEx(rayando, "Galin Enev", { 75, 30 }, 30, 3, WHITE);
+            DrawTextEx(rayando, "Rosica Velkova", { 510, 30 }, 30, 3, WHITE);
+            DrawTextEx(rayando, "Zlati Georgakiev", { 35, 554 }, 30, 3, WHITE);
+            DrawTextEx(rayando, "Iliqn Iliev", { 550, 554 }, 30, 3, WHITE);
 
             if (backButton.isPressed(mousePosition, mousePressed)) {
                 currentScreen = MAINMENU;
@@ -483,14 +603,14 @@ int main()
         {
             backButton.Draw();
 
-            DrawTextEx(font, "How to play", { 200, 90 }, 50, 10, WHITE);
+            DrawTextEx(rayando, "How to play", { 200, 90 }, 50, 10, WHITE);
 
-            DrawTextEx(font, "You guess one letter at a time. If your letter is in", { 30, 200 }, 25, 2, WHITE);
-            DrawTextEx(font, "the word, every instance of that letter is filled in.", { 30, 240 }, 25, 2, WHITE);
-            DrawTextEx(font, "If the letter is not in the word, the game adds one ", { 30, 280 }, 25, 2, WHITE);
-            DrawTextEx(font, "part to the hangman drawing. You keep guessing ", { 30, 320 }, 25, 2, WHITE);
-            DrawTextEx(font, "until the word is complete or the hangman is fully ", { 30, 360 }, 25, 2, WHITE);
-            DrawTextEx(font, "drawn", { 30, 400 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "You guess one letter at a time. If your letter is in", { 30, 200 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "the word, every instance of that letter is filled in.", { 30, 240 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "If the letter is not in the word, the game adds one ", { 30, 280 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "part to the hangman drawing. You keep guessing ", { 30, 320 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "until the word is complete or the hangman is fully ", { 30, 360 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "drawn", { 30, 400 }, 25, 2, WHITE);
 
             if (backButton.isPressed(mousePosition, mousePressed)) {
                 currentScreen = MAINMENU;
