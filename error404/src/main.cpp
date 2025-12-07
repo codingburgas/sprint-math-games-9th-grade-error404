@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <format>
 
 
 
@@ -18,7 +17,7 @@ typedef enum Screen {
     WON,
     LOSE,
     CREDITS,
-    RULES,
+    RULES
 }Screen;
 
 Screen currentScreen = MAINMENU;
@@ -77,7 +76,7 @@ int main()
     Button mediumButton("../assets/buttons/medium-button.png", { 300, 270 }, 0.21f);
     Button easyButton("../assets/buttons/easy-button.png", { 530, 270 }, 0.15f);
 
-    Button backButton("../assets/buttons/back-button.png", { 320, 450 }, 0.15f);
+    Button backButton("../assets/buttons/back-button.png", { 320, 500 }, 0.15f);
 
     Button resumeButton("../assets/buttons/resume-button.png", { 320, 200 }, 0.40f);
 
@@ -611,12 +610,13 @@ int main()
 
             DrawTextEx(rayando, "How to play", { 200, 90 }, 50, 10, WHITE);
 
-            DrawTextEx(rayando, "You guess one letter at a time. If your letter is in", { 30, 200 }, 25, 2, WHITE);
-            DrawTextEx(rayando, "the word, every instance of that letter is filled in.", { 30, 240 }, 25, 2, WHITE);
-            DrawTextEx(rayando, "If the letter is not in the word, the game adds one ", { 30, 280 }, 25, 2, WHITE);
-            DrawTextEx(rayando, "part to the hangman drawing. You keep guessing ", { 30, 320 }, 25, 2, WHITE);
-            DrawTextEx(rayando, "until the word is complete or the hangman is fully ", { 30, 360 }, 25, 2, WHITE);
-            DrawTextEx(rayando, "drawn", { 30, 400 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "You guess one letter at a time. ", { 30, 200 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "If your letter is in the word, every instance of ", { 30, 240 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "that letter is filled in. ", { 30, 280 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "If the letter is not in the word, the game adds one ", { 30, 320 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "part to the hangman drawing. ", { 30, 360 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "You keep guessing until the word is complete or ", { 30, 400 }, 25, 2, WHITE);
+            DrawTextEx(rayando, "the hangman is fully drawn", { 30, 440 }, 25, 2, WHITE);
 
             if (backButton.isPressed(mousePosition, mousePressed)) {
                 currentScreen = MAINMENU;
