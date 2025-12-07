@@ -24,7 +24,7 @@ typedef enum Screen {
 Screen currentScreen = MAINMENU;
 
 int main()
-{   
+{
     srand(time(NULL));
 
     InitWindow(800, 600, "Hangman by error404");
@@ -39,6 +39,7 @@ int main()
 
     Texture2D background = LoadTexture("../assets/images/background.png");
     Texture2D logo = LoadTexture("../assets/images/logo.png");
+
 
 
     Texture2D keyQ = LoadTexture("../assets/buttons/q-key-button");
@@ -68,16 +69,21 @@ int main()
     Texture2D keyN = LoadTexture("../assets/buttons/n-key-button");
     Texture2D keyM = LoadTexture("../assets/buttons/m-key-button");
 
-    Button startButton("../assets/buttons/start-button.png", { 335, 230 }, 0.60f); 
+    Texture2D galin = LoadTexture("../assets/images/galin.png");
+    Texture2D iliqn = LoadTexture("../assets/images/iliqn.png");
+    Texture2D rosica = LoadTexture("../assets/images/rosica.png");
+    Texture2D zlati = LoadTexture("../assets/images/zlati.png");
+
+    Button startButton("../assets/buttons/start-button.png", { 335, 230 }, 0.60f);
     Button exitButton("../assets/buttons/exit-button.png", { 343, 500 }, 0.60f);
 
-    Button hardButton("../assets/buttons/hard-button.png", { 130,  270}, 0.15f); 
+    Button hardButton("../assets/buttons/hard-button.png", { 130,  270 }, 0.15f);
     Button mediumButton("../assets/buttons/medium-button.png", { 300, 270 }, 0.21f);
     Button easyButton("../assets/buttons/easy-button.png", { 530, 270 }, 0.15f);
 
-    Button backButton("../assets/buttons/back-button.png", { 320, 500 }, 0.15f);
+    Button backButton("../assets/buttons/back-button.png", { 320, 450 }, 0.15f);
 
-    Button resumeButton("../assets/buttons/resume-button.png", { 320, 200}, 0.40f);
+    Button resumeButton("../assets/buttons/resume-button.png", { 320, 200 }, 0.40f);
 
     Button rulesButton("../assets/buttons/rules-button.png", { 315, 320 }, 0.60f);
     Button creditsButton("../assets/buttons/credits-button.png", { 290, 410 }, 0.60f);
@@ -145,318 +151,351 @@ int main()
 
         switch (currentScreen)
         {
-            case MAINMENU:
-            {
-                DrawTexture(logo, 200, 60, WHITE);
-                
-                startButton.Draw();
-                rulesButton.Draw();
-                creditsButton.Draw();
-                exitButton.Draw();
-                
-                if (startButton.isPressed(mousePosition, mousePressed)) {
-                    currentScreen = GAMEDIFFICULTY;
-                }
+        case MAINMENU:
+        {
+            DrawTexture(logo, 200, 60, WHITE);
 
-                if (exitButton.isPressed(mousePosition, mousePressed)) {
-                    exit = true;
-                }
-                
-                if (rulesButton.isPressed(mousePosition, mousePressed)) {
-                    currentScreen = RULES;
-                }
-            }break;
-            
-            case GAMEDIFFICULTY:
-            {
-                DrawTextEx(font, "Choose game difficulty", { 100, 150 }, 50, 2, WHITE);
+            startButton.Draw();
+            rulesButton.Draw();
+            creditsButton.Draw();
+            exitButton.Draw();
 
-                hardButton.Draw();
-                mediumButton.Draw();
-                easyButton.Draw();
+            if (startButton.isPressed(mousePosition, mousePressed)) {
+                currentScreen = GAMEDIFFICULTY;
+            }
 
-                backButton.Draw();
+            if (exitButton.isPressed(mousePosition, mousePressed)) {
+                exit = true;
+            }
 
-                auto loadWord = [&](int diff) {
-                    std::string s = wordSelect(diff);
-                    strcpy_s(word, sizeof(word), s.c_str());
-                    wordSize = (int)s.size();
+            if (rulesButton.isPressed(mousePosition, mousePressed)) {
+                currentScreen = RULES;
+            }
 
-                    memset(reveal, 0, sizeof(reveal));
-                    guessCount = 0;
-                    revealCounter = 0;
-                    guess = '\0';
-                    lastGuess = '\0';
+            if (creditsButton.isPressed(mousePosition, mousePressed)) {
+                currentScreen = CREDITS;
+            }
+        }break;
 
-                    cout << "Selected word: " << s << endl;
-                    currentScreen = GAME;
-                    };
+        case GAMEDIFFICULTY:
+        {
+            DrawTextEx(font, "Choose game difficulty", { 105, 150 }, 50, 2, WHITE);
 
-                if (hardButton.isPressed(mousePosition, mousePressed)) {
-                    gameDifficulty = 3;
-                    loadWord(gameDifficulty);
-                }
+            hardButton.Draw();
+            mediumButton.Draw();
+            easyButton.Draw();
 
-                if (mediumButton.isPressed(mousePosition, mousePressed)) {
-                    gameDifficulty = 2;
-                    loadWord(gameDifficulty);
-                }
+            backButton.Draw();
 
-                if (easyButton.isPressed(mousePosition, mousePressed)) {
-                    gameDifficulty = 1;
-                    loadWord(gameDifficulty);
-                }
+            if (hardButton.isPressed(mousePosition, mousePressed)) {
+                gameDifficulty = 3;
 
-                if (backButton.isPressed(mousePosition, mousePressed)) {
-                    currentScreen = MAINMENU;
-                }
-            } break;
-
-            
-            case GAME:
-            {
-                qKeyButton.Draw();
-                wKeyButton.Draw();
-                eKeyButton.Draw();
-                rKeyButton.Draw();
-                tKeyButton.Draw();
-                yKeyButton.Draw();
-                uKeyButton.Draw();
-                iKeyButton.Draw();
-                oKeyButton.Draw();
-                pKeyButton.Draw();
-                aKeyButton.Draw();
-                sKeyButton.Draw();
-                dKeyButton.Draw();
-                fKeyButton.Draw();
-                gKeyButton.Draw();
-                hKeyButton.Draw();
-                jKeyButton.Draw();
-                kKeyButton.Draw();
-                lKeyButton.Draw();
-                zKeyButton.Draw();
-                xKeyButton.Draw();
-                cKeyButton.Draw();
-                vKeyButton.Draw();
-                bKeyButton.Draw();
-                nKeyButton.Draw();
-                mKeyButton.Draw();
-
-
-
-                if (guess != '\0')
-                {
-                    for (int i = 0; i < wordSize; i++) {
-                        if (word[i] == guess) {
-                            reveal[i] = true;
-                        }
-                    }
-                }
+                strcpy_s(word, strlen(word), wordSelect(gameDifficulty).c_str());
+                wordSize = strlen(word);
 
                 for (int i = 0; i < wordSize; i++) {
-                    if (reveal[i] or i == 0 or i == wordSize - 1) {
-                        DrawTextEx(font, TextFormat("%c", word[i]), Vector2{ 50.0f + i * 50.0f, 200.0f }, 80.0f, 2.0f, WHITE);
-                    }
-                    else {
-                        DrawText("_", 50 + i * 50, 200, 80, WHITE);
-                    }
+                    cout << word[i];
                 }
 
+                cout << endl;
 
-                if (qKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Q)) {
-                    guess = 'q';
+                currentScreen = GAME;
+            }
 
-                    flag = true;
-                }
-                else if (wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_W)) {
-                    guess = 'w';
+            if (mediumButton.isPressed(mousePosition, mousePressed)) {
+                gameDifficulty = 2;
 
-                    flag = true;
-                }
-                else if (eKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_E)) {
-                    flag = true;
-                    
-                    guess = 'e';
-                }
-                else if (rKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_R)) {
-                    guess = 'r';
+                strcpy_s(word, strlen(word), wordSelect(gameDifficulty).c_str());
+                wordSize = strlen(word);
 
-                    flag = true;
-                }
-                else if (tKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_T)) {
-                    guess = 't';
-
-                    flag = true;
-                }
-                else if (yKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Y)) {
-                    guess = 'y';
-
-                    flag = true;
-                }
-                else if (uKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_U)) {
-                    flag = true;
-
-                    guess = 'u';
-                }
-                else if (iKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_I)) {
-                    flag = true;
-
-                    guess = 'i';
-                }
-                else if (oKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_O)) {
-                    flag = true;
-
-                    guess = 'o';
-                }
-                else if (pKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_P)) {
-                    flag = true;
-
-                    guess = 'p';
-                }
-                else if (aKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_A)) {
-                    flag = true;
-
-                    guess = 'a';
-                }
-                else if (sKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_S)) {
-                    flag = true;
-
-                    guess = 's';
-                }
-                else if (dKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_D)) {
-                    flag = true;
-
-                    guess = 'd';
-                }
-                else if (fKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_F)) {
-                    flag = true;
-
-                    guess = 'f';
-                }
-                else if (gKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_G)) {
-                    flag = true;
-
-                    guess = 'g';
-                }
-                else if (hKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_H)) {
-                    flag = true;
-
-                    guess = 'h';
-                }
-                else if (jKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_J)) {
-                    flag = true;
-
-                    guess = 'j';
-                }
-                else if (kKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_K)) {
-                    flag = true;
-
-                    guess = 'k';
-                }
-                else if (lKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_L)) {
-                    flag = true;
-
-                    guess = 'l';
-                }
-                else if (zKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Z)) {
-                    flag = true;
-
-                    guess = 'z';
-                }
-                else if (xKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_X)) {
-                    flag = true;
-
-                    guess = 'x';
-                }
-                else if (cKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_C)) {
-                    flag = true;
-
-                    guess = 'c';
-                }
-                else if (vKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_V)) {
-                    flag = true;
-
-                    guess = 'v';
-                }
-                else if (bKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_B)) {
-                    flag = true;
-
-                    guess = 'b';
-                }
-                else if (nKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_N)) {
-                    flag = true;
-
-                    guess = 'n';
-                }
-                else if (mKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_M)) {
-                    flag = true;
-
-                    guess = 'm';
+                for (int i = 0; i < wordSize; i++) {
+                    cout << word[i];
                 }
 
-                if (messageTimer > 0)
-                {
-                    DrawTextEx(font, message, Vector2{ 50.0f, 100.0f }, 30.0f, 5.0f, RED);
-                    messageTimer--;
+                cout << endl;
+
+                currentScreen = GAME;
+            }
+
+            if (easyButton.isPressed(mousePosition, mousePressed)) {
+                gameDifficulty = 1;
+
+                strcpy_s(word, strlen(word), wordSelect(gameDifficulty).c_str());
+                wordSize = strlen(word);
+
+                for (int i = 0; i < wordSize; i++) {
+                    cout << word[i];
                 }
 
-                if (flag)
-                {
-                    bool alreadyGuessed = false;
-                    for (int i = 0; i < guessCount; i++) {
-                        if (guessed[i] == guess) {
-                            alreadyGuessed = true;
-                            break;
-                        }
-                    }
+                cout << endl;
 
-                    if (alreadyGuessed) {
-                        sprintf(message, "You already guessed '%c'!", guess);
-                        messageTimer = 120;
-                    }
-                    else {
-                        guessed[guessCount++] = guess;
-                    }
 
-                    cout << "Button clicked " << guess << endl;
-                    lastGuess = guess;
-                    flag = false;
-                }
-            }break;
-            
-            case WON:
+
+                currentScreen = GAME;
+            }
+
+            if (backButton.isPressed(mousePosition, mousePressed)) {
+                currentScreen = MAINMENU;
+            }
+        }break;
+
+        case GAME:
+        {
+            qKeyButton.Draw();
+            wKeyButton.Draw();
+            eKeyButton.Draw();
+            rKeyButton.Draw();
+            tKeyButton.Draw();
+            yKeyButton.Draw();
+            uKeyButton.Draw();
+            iKeyButton.Draw();
+            oKeyButton.Draw();
+            pKeyButton.Draw();
+            aKeyButton.Draw();
+            sKeyButton.Draw();
+            dKeyButton.Draw();
+            fKeyButton.Draw();
+            gKeyButton.Draw();
+            hKeyButton.Draw();
+            jKeyButton.Draw();
+            kKeyButton.Draw();
+            lKeyButton.Draw();
+            zKeyButton.Draw();
+            xKeyButton.Draw();
+            cKeyButton.Draw();
+            vKeyButton.Draw();
+            bKeyButton.Draw();
+            nKeyButton.Draw();
+            mKeyButton.Draw();
+
+
+
+            if (guess != '\0')
             {
-                
-            }break;
-            
-            case LOSE:
-            {
-                
-            }break;
-            
-            case CREDITS:
-            {
-                
-            }break;
-            
-            case RULES:
-            {
-                backButton.Draw();
-
-                DrawTextEx(font, "How to play", { 200, 90 }, 50, 10, WHITE);
-
-                DrawTextEx(font, "You guess one letter at a time. ", { 30, 200 }, 25, 2, WHITE);
-                DrawTextEx(font, "If your letter is in the word, every instance of ", { 30, 240 }, 25, 2, WHITE);
-                DrawTextEx(font, "that letter is filled in. ", { 30, 280 }, 25, 2, WHITE);
-                DrawTextEx(font, "If the letter is not in the word, the game adds one ", { 30, 320 }, 25, 2, WHITE);
-                DrawTextEx(font, "part to the hangman drawing. ", { 30, 360 }, 25, 2, WHITE);
-                DrawTextEx(font, "You keep guessing until the word is complete or ", { 30, 400 }, 25, 2, WHITE);
-                DrawTextEx(font, "the hangman is fully drawn", { 30, 440 }, 25, 2, WHITE);
-
-                if (backButton.isPressed(mousePosition, mousePressed)) {
-                    currentScreen = MAINMENU;
+                for (int i = 0; i < wordSize; i++) {
+                    if (word[i] == guess) {
+                        reveal[i] = true;
+                    }
                 }
-            }break;
+            }
+
+            for (int i = 0; i < wordSize; i++) {
+                if (reveal[i] or i == 0 or i == wordSize - 1) {
+                    DrawTextEx(font, TextFormat("%c", word[i]), Vector2{ 50.0f + i * 50.0f, 200.0f }, 80.0f, 2.0f, WHITE);
+                }
+                else {
+                    DrawText("_", 50 + i * 50, 200, 80, WHITE);
+                }
+            }
+
+
+            if (qKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Q)) {
+                guess = 'q';
+
+                flag = true;
+            }
+            else if (wKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_W)) {
+                guess = 'w';
+
+                flag = true;
+            }
+            else if (eKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_E)) {
+                flag = true;
+
+                guess = 'e';
+            }
+            else if (rKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_R)) {
+                guess = 'r';
+
+                flag = true;
+            }
+            else if (tKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_T)) {
+                guess = 't';
+
+                flag = true;
+            }
+            else if (yKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Y)) {
+                guess = 'y';
+
+                flag = true;
+            }
+            else if (uKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_U)) {
+                flag = true;
+
+                guess = 'u';
+            }
+            else if (iKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_I)) {
+                flag = true;
+
+                guess = 'i';
+            }
+            else if (oKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_O)) {
+                flag = true;
+
+                guess = 'o';
+            }
+            else if (pKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_P)) {
+                flag = true;
+
+                guess = 'p';
+            }
+            else if (aKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_A)) {
+                flag = true;
+
+                guess = 'a';
+            }
+            else if (sKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_S)) {
+                flag = true;
+
+                guess = 's';
+            }
+            else if (dKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_D)) {
+                flag = true;
+
+                guess = 'd';
+            }
+            else if (fKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_F)) {
+                flag = true;
+
+                guess = 'f';
+            }
+            else if (gKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_G)) {
+                flag = true;
+
+                guess = 'g';
+            }
+            else if (hKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_H)) {
+                flag = true;
+
+                guess = 'h';
+            }
+            else if (jKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_J)) {
+                flag = true;
+
+                guess = 'j';
+            }
+            else if (kKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_K)) {
+                flag = true;
+
+                guess = 'k';
+            }
+            else if (lKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_L)) {
+                flag = true;
+
+                guess = 'l';
+            }
+            else if (zKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_Z)) {
+                flag = true;
+
+                guess = 'z';
+            }
+            else if (xKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_X)) {
+                flag = true;
+
+                guess = 'x';
+            }
+            else if (cKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_C)) {
+                flag = true;
+
+                guess = 'c';
+            }
+            else if (vKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_V)) {
+                flag = true;
+
+                guess = 'v';
+            }
+            else if (bKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_B)) {
+                flag = true;
+
+                guess = 'b';
+            }
+            else if (nKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_N)) {
+                flag = true;
+
+                guess = 'n';
+            }
+            else if (mKeyButton.isPressed(mousePosition, mousePressed) or IsKeyPressed(KEY_M)) {
+                flag = true;
+
+                guess = 'm';
+            }
+
+            for (int i = 0; i < guessCount; i++) {
+                if (guessed[i] == guess) {
+                    alreadyGuessed = true;
+                    break;
+                }
+            }
+
+            if (alreadyGuessed && guess != '\0' && lastGuess != guess) {
+                sprintf(message, "You already guessed '%c'!", guess);
+                messageTimer = 120;
+            }
+
+            if (messageTimer > 0)
+            {
+                DrawTextEx(font, message, Vector2{ 50.0f, 100.0f }, 30.0f, 5.0f, RED);
+                messageTimer--;
+            }
+
+            if (flag) {
+                cout << "Button clicked " << guess << endl;
+
+                flag = false;
+
+                lastGuess = guess;
+                guessed[guessCount++] = guess;
+            }
+        }break;
+
+        case WON:
+        {
+
+        }break;
+
+        case LOSE:
+        {
+
+        }break;
+
+        case CREDITS:
+        {
+            backButton.Draw();
+
+            DrawTexture(galin, 70, 70, WHITE);
+            DrawTexture(rosica, 538, 70, WHITE);
+            DrawTexture(iliqn, 538, 332, WHITE);
+            DrawTexture(zlati, 70, 332, WHITE);
+
+            DrawTextEx(font, "Our team", { 275, 280 }, 50, 3, WHITE);
+
+            DrawTextEx(font, "Galin Enev", { 75, 30 }, 30, 3, WHITE);
+            DrawTextEx(font, "Rosica Velkova", { 510, 30 }, 30, 3, WHITE);
+            DrawTextEx(font, "Zlati Georgakiev", { 35, 554 }, 30, 3, WHITE);
+            DrawTextEx(font, "Iliqn Iliev", { 550, 554 }, 30, 3, WHITE);
+
+            if (backButton.isPressed(mousePosition, mousePressed)) {
+                currentScreen = MAINMENU;
+            }
+        }break;
+
+        case RULES:
+        {
+            backButton.Draw();
+
+            DrawTextEx(font, "How to play", { 200, 90 }, 50, 10, WHITE);
+
+            DrawTextEx(font, "You guess one letter at a time. If your letter is in", { 30, 200 }, 25, 2, WHITE);
+            DrawTextEx(font, "the word, every instance of that letter is filled in.", { 30, 240 }, 25, 2, WHITE);
+            DrawTextEx(font, "If the letter is not in the word, the game adds one ", { 30, 280 }, 25, 2, WHITE);
+            DrawTextEx(font, "part to the hangman drawing. You keep guessing ", { 30, 320 }, 25, 2, WHITE);
+            DrawTextEx(font, "until the word is complete or the hangman is fully ", { 30, 360 }, 25, 2, WHITE);
+            DrawTextEx(font, "drawn", { 30, 400 }, 25, 2, WHITE);
+
+            if (backButton.isPressed(mousePosition, mousePressed)) {
+                currentScreen = MAINMENU;
+            }
+        }break;
         }
 
         EndDrawing();
