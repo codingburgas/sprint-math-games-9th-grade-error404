@@ -6,22 +6,24 @@
  
 <br>
 <p>Hello, we are Error404!</p>
-<p>Error404 is a passionate group of developers who brought classic wordplay to life by creating a Hangman game in C++. Focused on clean code and interactive design, the team combined problem-solving skills with creativity to deliver a fun, console-based experience that challenges players’ vocabulary and logic. Our project showcases teamwork, programming fundamentals, and the ability to turn a simple idea into an engaging game.</p>
+<p>Error404 is a passionate group of students who brought classic wordplay to life by creating a Hangman game in C++. Focused on clean code and interactive design, the team combined problem-solving skills with creativity to deliver a fun, console-based experience that challenges players’ vocabulary and logic. Our project showcases teamwork, programming fundamentals, and the ability to turn a simple idea into an engaging game.</p>
 <br>
  
 <h2 align="left">🚀 Languages and Libraries </h2>
 <p align="left">
-<a href="https://cplusplus.com"><img src="assets/images/ISO_C++_Logo.svg.png" alt="C++ logo" height=48px width=48px></a>
-<a href="https://www.raylib.com"><img src ="assets/images/Raylib_logo.png" alt="Raylib logo" height=48px width=48px></a>
+<a href="https://cplusplus.com"><img src="assets/images/cpp.png" alt="C++ logo" height=48px width=48px></a>
+<a href="https://www.raylib.com"><img src ="assets/images/raylib.png" alt="Raylib logo" height=48px width=48px></a>
 </p>
  
 <h2 align="left">🔧 Used Tools </h2>
 <p align="left">
-   <a href="https://www.microsoft.com/en-ww/microsoft-365/word"><img src="assets/images/Microsoft_Office_Word_(2019–2025).svg.png" alt="MS Word logo" width=50px></a>
-   <a href="https://www.microsoft.com/en-us/microsoft-365/powerpoint"><img src="assets/images/Microsoft_PowerPoint_2013-2019_logo.svg.png" alt="MS PowerPoint logo" width=50px>
-   <a href="https://visualstudio.microsoft.com/"><img src="assets/images/Visual_Studio_Icon_2026.svg.png" alt="Visual Studio logo" width=42px/></a>
-   <a href="https://github.com/"><img src="assets/images/channels4_profile.png" alt="GitHub" heigh=48px width=48px></a>
-   <a href="https://teams.microsoft.com/_?culture=en-us&country=us#/conversations/19:b01cf915e57b430ea93ab780c4f6b6dc@thread.v2?ctx=chat"><img src="assets/images/images.png" alt="Teams logo" width=48px></a>
+   <a href="https://www.microsoft.com/en-ww/microsoft-365/word"><img src="assets/images/word.png" alt="MS Word logo" width=50px></a>
+   <a href="https://www.microsoft.com/en-us/microsoft-365/powerpoint"><img src="assets/images/power-point.png" alt="MS PowerPoint logo" width=50px>
+   <a href="https://visualstudio.microsoft.com/"><img src="assets/images/visual-studio.png" alt="Visual Studio logo" width=42px/></a>
+   <a href="https://github.com/"><img src="assets/images/github.png" alt="GitHub" heigh=48px width=48px></a>
+   <a href="https://teams.microsoft.com/_?culture=en-us&country=us#/conversations/19:b01cf915e57b430ea93ab780c4f6b6dc@thread.v2?ctx=chat"><img src="assets/images/teams.png" alt="Teams logo" width=48px></a>
+   <a href="https://visualstudio.microsoft.com/"><img src="assets/images/visual-studio.png" alt="Visual Studio logo" width=42px/></a>
+   <a href="https://git-scm.com"><img src="assets/images/git.png" alt="Git" heigh=48px width=48px></a>
  <br>
  
 <h2 align="left">📄 Documents</h2><br>
