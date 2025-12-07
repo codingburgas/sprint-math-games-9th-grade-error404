@@ -146,17 +146,11 @@ int main()
 
     bool wrong;
 
-    int winCount = 0;
-    int lostCount = 0;
-
     char guessed[1000];
     bool reveal[1000] = { false };
 
     char message[200] = "";
     int messageTimer = 0;
-
-    char winsMessage[200];
-    char lossesMesssage[200];
 
     while (!WindowShouldClose() && !exit)
     {
@@ -358,9 +352,6 @@ int main()
                 guessed[guessCount++] = guess;
 
                 if (allGuessed) {
-                    winCount++;
-                    sprintf(lossesMesssage, "losses: '%d'", lostCount);
-                    sprintf(winsMessage, "wins: '%d'", winCount);
                     currentScreen = WON;
                 }
 
@@ -529,9 +520,6 @@ int main()
             DrawTextureEx(hangman[stage], { 460.0f, 0.0f}, 0.0f, 1.3f, WHITE);
 
             if (lives == 1) {
-                lostCount++;
-                sprintf(winsMessage, "wins: '%d'", winCount);
-                sprintf(lossesMesssage, "losses: '%d'", lostCount);
                 currentScreen = LOSE;
             }
         }break;
@@ -544,9 +532,6 @@ int main()
 
             playAgain.Draw();
             backToMenu.Draw();
-
-            DrawTextEx(rayando, winsMessage, Vector2{ 50.0f, 500.0f }, 30.0f, 2.0f, GREEN);
-            DrawTextEx(rayando, lossesMesssage, Vector2{ 50.0f, 550.0f }, 30.0f, 2.0f, RED);
 
             if (playAgain.isPressed(mousePosition, mousePressed)) {
                 currentScreen = GAMEDIFFICULTY;
@@ -565,9 +550,6 @@ int main()
 
             playAgain.Draw();
             backToMenu.Draw();
-
-            DrawTextEx(rayando, winsMessage, Vector2{ 50.0f, 500.0f }, 30.0f, 2.0f, GREEN);
-            DrawTextEx(rayando, lossesMesssage, Vector2{ 50.0f, 550.0f }, 30.0f, 2.0f, RED);
 
             if (playAgain.isPressed(mousePosition, mousePressed)) {
                 currentScreen = GAMEDIFFICULTY;
