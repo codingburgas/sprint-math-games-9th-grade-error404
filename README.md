@@ -1,5 +1,5 @@
 <p align="center">
-<img src="assets/images/">
+<img src="assets/images/logo.png">
 </p>
  
 <h1 align="center">🎮 Error404</h1>
@@ -28,8 +28,8 @@
  
 <h2 align="left">📄 Documents</h2><br>
   <ul>
-    <li><a href="">Documentation</a></li>
-    <li><a href="">Presentation</a></li>
+    <li><a href="docs/documentation.docx">Documentation</a></li>
+    <li><a href="docs/presentation.pptx">Presentation</a></li>
   </ul>  
  
 <h2 align="left">👨🏻💻 Team Members </h2>
