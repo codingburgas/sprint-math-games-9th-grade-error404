@@ -202,6 +202,14 @@ int main()
 
             if (hardButton.isPressed(mousePosition, mousePressed)) {
                 gameDifficulty = 3;
+                
+                guessCount = 0;
+                stage = 0;
+                flag = false;
+                wrong = false;
+                messageTimer = 0;
+                guess = '\0';
+                revealCounter = 0;
                 lives = 7;
 
                 string temp = wordSelect(gameDifficulty);
@@ -224,6 +232,14 @@ int main()
 
             if (mediumButton.isPressed(mousePosition, mousePressed)) {
                 gameDifficulty = 2;
+                
+                guessCount = 0;
+                stage = 0;
+                flag = false;
+                wrong = false;
+                messageTimer = 0;
+                guess = '\0';
+                revealCounter = 0;
                 lives = 7;
 
                 string temp = wordSelect(gameDifficulty);
@@ -246,6 +262,14 @@ int main()
 
             if (easyButton.isPressed(mousePosition, mousePressed)) {
                 gameDifficulty = 1;
+                
+                guessCount = 0;
+                stage = 0;
+                flag = false;
+                wrong = false;
+                messageTimer = 0;
+                guess = '\0';
+                revealCounter = 0;
                 lives = 7;
 
                 string temp = wordSelect(gameDifficulty);
